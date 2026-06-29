@@ -3,7 +3,7 @@ import store
 import promotions
 
 
-def list_products(store_obj):
+def list_products(store_obj: store.Store) -> None:
     all_products = store_obj.get_all_products()
     print("------")
     number = 1
@@ -14,16 +14,16 @@ def list_products(store_obj):
     print("------")
 
 
-def show_total(store_obj):
+def show_total(store_obj: store.Store) -> None:
     print(f"Total of {store_obj.get_total_quantity()} items in store")
 
 
-def make_order(store_obj):
+def make_order(store_obj: store.Store) -> None:
     all_products = store_obj.get_all_products()
     list_products(store_obj)
     print("When you want to finish order, enter empty text.")
 
-    shopping_list = []
+    shopping_list: list[tuple[products.Product, int]] = []
     while True:
         product_choice = input("Which product # do you want? ")
         amount = input("What amount do you want? ")
@@ -44,7 +44,7 @@ def make_order(store_obj):
             print(f"Error while making order! {error}")
 
 
-def start(store_obj):
+def start(store_obj: store.Store) -> None:
     while True:
         print("\n   Store Menu")
         print("   ----------")
@@ -66,7 +66,7 @@ def start(store_obj):
             print("Error with your choice! Try again!")
 
 
-def main():
+def main() -> None:
     mac = products.Product("MacBook Air M2", price=1450, quantity=100)
     bose = products.Product("Bose QuietComfort Earbuds", price=250, quantity=500)
     pixel = products.Product("Google Pixel 7", price=500, quantity=250)
