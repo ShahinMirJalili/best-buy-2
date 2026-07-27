@@ -4,6 +4,7 @@ import promotions
 
 
 def list_products(store_obj: store.Store) -> None:
+    """Listet alle aktiven Produkte des Stores nummeriert auf."""
     all_products = store_obj.get_all_products()
     print("------")
     number = 1
@@ -15,10 +16,12 @@ def list_products(store_obj: store.Store) -> None:
 
 
 def show_total(store_obj: store.Store) -> None:
+    """Gibt die Gesamtmenge aller aktiven Produkte im Store aus."""
     print(f"Total of {store_obj.get_total_quantity()} items in store")
 
 
 def make_order(store_obj: store.Store) -> None:
+    """Führt den Nutzer durch eine Bestellung und gibt am Ende den Gesamtpreis aus."""
     all_products = store_obj.get_all_products()
     list_products(store_obj)
     print("When you want to finish order, enter empty text.")
@@ -45,6 +48,7 @@ def make_order(store_obj: store.Store) -> None:
 
 
 def start(store_obj: store.Store) -> None:
+    """Zeigt das Store-Menü und verarbeitet die Nutzereingaben in einer Schleife."""
     while True:
         print("\n   Store Menu")
         print("   ----------")
@@ -67,6 +71,7 @@ def start(store_obj: store.Store) -> None:
 
 
 def main() -> None:
+    """Startet die Best-Buy-Anwendung mit Beispielprodukten und Promotions."""
     mac = products.Product("MacBook Air M2", price=1450, quantity=100)
     bose = products.Product("Bose QuietComfort Earbuds", price=250, quantity=500)
     pixel = products.Product("Google Pixel 7", price=500, quantity=250)
