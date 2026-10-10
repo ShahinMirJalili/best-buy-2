@@ -1,3 +1,4 @@
+"""Promotions that can be added to products."""
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
@@ -7,45 +8,45 @@ if TYPE_CHECKING:
 
 
 class Promotion(ABC):
-    """Abstrakte Basisklasse für alle Promotions (Rabattaktionen)."""
+    """Abstract base class for all promotions."""
 
     def __init__(self, name: str) -> None:
-        """Legt eine Promotion mit einem Namen an."""
+        """Create a promotion with a name."""
         self.name: str = name
 
     @abstractmethod
     def apply_promotion(self, product: Product, quantity: int) -> float:
-        """Berechnet den Gesamtpreis für die Menge unter Anwendung der Promotion."""
-        pass
+        """Return the total price with the promotion applied."""
 
 
 class PercentDiscount(Promotion):
-    """Promotion mit prozentualem Rabatt auf den Gesamtpreis."""
+    """A percent discount on the total price."""
 
     def __init__(self, name: str, percent: float) -> None:
-        """Legt einen Prozent-Rabatt mit Namen und Prozentsatz an."""
+        """Create a percent discount with a name and a percent value."""
         super().__init__(name)
         self.percent: float = percent
 
     def apply_promotion(self, product: Product, quantity: int) -> float:
-        """Gibt den Preis abzüglich des Prozent-Rabatts zurück."""
+        """Return the price minus the percent discount."""
         return product.price * quantity * (1 - self.percent / 100)
 
 
 class SecondHalfPrice(Promotion):
-    """Promotion: jedes zweite Produkt zum halben Preis."""
+    """Every second item costs half price."""
 
     def apply_promotion(self, product: Product, quantity: int) -> float:
-        """Berechnet den Preis, wobei jedes zweite Stück halb so viel kostet."""
+        """Return the price where every second item is half price."""
         full_price_items = quantity // 2 + quantity % 2
         half_price_items = quantity // 2
-        return full_price_items * product.price + half_price_items * product.price * 0.5
+        half_price = product.price * 0.5
+        return full_price_items * product.price + half_price_items * half_price
 
 
 class ThirdOneFree(Promotion):
-    """Promotion: jedes dritte Produkt ist gratis."""
+    """Every third item is free."""
 
     def apply_promotion(self, product: Product, quantity: int) -> float:
-        """Berechnet den Preis, wobei jedes dritte Stück kostenlos ist."""
+        """Return the price where every third item is free."""
         paid_items = quantity - quantity // 3
         return paid_items * product.price

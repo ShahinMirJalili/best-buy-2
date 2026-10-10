@@ -1,3 +1,4 @@
+"""Product classes for the Best Buy store."""
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -6,10 +7,10 @@ if TYPE_CHECKING:
 
 
 class Product:
-    """Repräsentiert ein Produkt mit Name, Preis, Menge, Aktiv-Status und optionaler Promotion."""
+    """A store product with name, price, quantity and a promotion."""
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
-        """Legt ein Produkt an und prüft Name, Preis und Menge auf gültige Werte."""
+        """Create a product and validate name, price and quantity."""
         if not name:
             raise ValueError("Name darf nicht leer sein")
         if price < 0:
@@ -23,11 +24,11 @@ class Product:
         self.promotion: Promotion | None = None
 
     def get_quantity(self) -> int:
-        """Gibt die aktuelle Lagermenge zurück."""
+        """Return the current quantity."""
         return self.quantity
 
     def set_quantity(self, quantity: int) -> None:
-        """Setzt die Menge und deaktiviert das Produkt, wenn sie 0 erreicht."""
+        """Set the quantity and deactivate the product when it reaches 0."""
         self.quantity = quantity
         if self.quantity == 0:
             self.deactivate()
@@ -35,34 +36,34 @@ class Product:
             self.activate()
 
     def is_active(self) -> bool:
-        """Gibt zurück, ob das Produkt aktiv (verfügbar) ist."""
+        """Return True if the product is active."""
         return self.active
 
     def activate(self) -> None:
-        """Setzt das Produkt auf aktiv."""
+        """Activate the product."""
         self.active = True
 
     def deactivate(self) -> None:
-        """Setzt das Produkt auf inaktiv."""
+        """Deactivate the product."""
         self.active = False
 
     def get_promotion(self) -> Promotion | None:
-        """Gibt die aktuelle Promotion des Produkts zurück (oder None)."""
+        """Return the current promotion or None."""
         return self.promotion
 
     def set_promotion(self, promotion: Promotion) -> None:
-        """Weist dem Produkt eine Promotion zu."""
+        """Set a promotion for the product."""
         self.promotion = promotion
 
     def show(self) -> None:
-        """Gibt Name, Preis, Menge und ggf. Promotion des Produkts aus."""
+        """Print the product details and its promotion."""
         info = f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
         if self.promotion:
             info += f", Promotion: {self.promotion.name}"
         print(info)
 
     def buy(self, quantity: int) -> float:
-        """Kauft die Menge, prüft Aktiv-Status, Menge und Lager, wendet Promotion an und gibt den Preis zurück."""
+        """Buy the given quantity and return the total price."""
         if not self.active:
             raise ValueError("Produkt ist nicht aktiv")
         if quantity <= 0:
@@ -78,18 +79,17 @@ class Product:
 
 
 class NonStockedProduct(Product):
-    """Produkt ohne Lagerbestand (z. B. Software-Lizenz), immer verfügbar."""
+    """A product without stock, for example a software license."""
 
     def __init__(self, name: str, price: float) -> None:
-        """Legt ein nicht-lagerndes Produkt mit Menge 0 an."""
+        """Create a non stocked product with quantity 0."""
         super().__init__(name, price, quantity=0)
 
     def set_quantity(self, quantity: int) -> None:
-        """Ignoriert Mengenänderungen, da das Produkt keinen Bestand führt."""
-        pass
+        """Ignore quantity changes because there is no stock."""
 
     def buy(self, quantity: int) -> float:
-        """Kauft die Menge ohne Lagerprüfung und gibt den Preis (ggf. mit Promotion) zurück."""
+        """Buy the quantity without changing stock and return the price."""
         if not self.active:
             raise ValueError("Produkt ist nicht aktiv")
         if quantity <= 0:
@@ -99,7 +99,7 @@ class NonStockedProduct(Product):
         return self.price * quantity
 
     def show(self) -> None:
-        """Gibt das Produkt mit unbegrenzter Menge aus."""
+        """Print the product with unlimited quantity."""
         info = f"{self.name}, Price: {self.price}, Quantity: Unlimited"
         if self.promotion:
             info += f", Promotion: {self.promotion.name}"
@@ -107,22 +107,24 @@ class NonStockedProduct(Product):
 
 
 class LimitedProduct(Product):
-    """Produkt mit einer maximalen Kaufmenge pro Bestellung."""
+    """A product that can only be bought up to a maximum per order."""
 
-    def __init__(self, name: str, price: float, quantity: int, maximum: int) -> None:
-        """Legt ein Produkt mit Maximalmenge pro Bestellung an."""
+    def __init__(self, name: str, price: float, quantity: int,
+                 maximum: int) -> None:
+        """Create a limited product with a maximum per order."""
         super().__init__(name, price, quantity)
         self.maximum: int = maximum
 
     def buy(self, quantity: int) -> float:
-        """Kauft die Menge, sofern das Bestell-Maximum nicht überschritten wird."""
+        """Buy the given quantity if it is not above the maximum."""
         if quantity > self.maximum:
             raise ValueError(f"Nur {self.maximum} mal pro Bestellung erlaubt")
         return super().buy(quantity)
 
     def show(self) -> None:
-        """Gibt das Produkt mit Hinweis auf das Bestell-Limit aus."""
-        info = f"{self.name}, Price: {self.price}, Limited to {self.maximum} per order!"
+        """Print the product with its order limit."""
+        info = (f"{self.name}, Price: {self.price}, "
+                f"Limited to {self.maximum} per order!")
         if self.promotion:
             info += f", Promotion: {self.promotion.name}"
         print(info)

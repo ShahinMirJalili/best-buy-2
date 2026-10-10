@@ -1,10 +1,11 @@
+"""Menu for the Best Buy store."""
 import products
 import store
 import promotions
 
 
 def list_products(store_obj: store.Store) -> None:
-    """Listet alle aktiven Produkte des Stores nummeriert auf."""
+    """Print all active products with a number."""
     all_products = store_obj.get_all_products()
     print("------")
     number = 1
@@ -16,12 +17,12 @@ def list_products(store_obj: store.Store) -> None:
 
 
 def show_total(store_obj: store.Store) -> None:
-    """Gibt die Gesamtmenge aller aktiven Produkte im Store aus."""
+    """Print the total quantity of the store."""
     print(f"Total of {store_obj.get_total_quantity()} items in store")
 
 
 def make_order(store_obj: store.Store) -> None:
-    """Führt den Nutzer durch eine Bestellung und gibt am Ende den Gesamtpreis aus."""
+    """Ask the user for products and amounts and make the order."""
     all_products = store_obj.get_all_products()
     list_products(store_obj)
     print("When you want to finish order, enter empty text.")
@@ -29,8 +30,10 @@ def make_order(store_obj: store.Store) -> None:
     shopping_list: list[tuple[products.Product, int]] = []
     while True:
         product_choice = input("Which product # do you want? ")
+        if product_choice == "":
+            break
         amount = input("What amount do you want? ")
-        if product_choice == "" or amount == "":
+        if amount == "":
             break
         try:
             product = all_products[int(product_choice) - 1]
@@ -48,7 +51,7 @@ def make_order(store_obj: store.Store) -> None:
 
 
 def start(store_obj: store.Store) -> None:
-    """Zeigt das Store-Menü und verarbeitet die Nutzereingaben in einer Schleife."""
+    """Show the store menu until the user quits."""
     while True:
         print("\n   Store Menu")
         print("   ----------")
@@ -71,12 +74,14 @@ def start(store_obj: store.Store) -> None:
 
 
 def main() -> None:
-    """Startet die Best-Buy-Anwendung mit Beispielprodukten und Promotions."""
+    """Create the products and promotions and start the store."""
     mac = products.Product("MacBook Air M2", price=1450, quantity=100)
-    bose = products.Product("Bose QuietComfort Earbuds", price=250, quantity=500)
+    bose = products.Product("Bose QuietComfort Earbuds", price=250,
+                            quantity=500)
     pixel = products.Product("Google Pixel 7", price=500, quantity=250)
     windows = products.NonStockedProduct("Windows License", price=125)
-    shipping = products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
+    shipping = products.LimitedProduct("Shipping", price=10, quantity=250,
+                                       maximum=1)
 
     second_half_price = promotions.SecondHalfPrice("Second Half price!")
     third_one_free = promotions.ThirdOneFree("Third One Free!")
